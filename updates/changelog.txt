@@ -1,0 +1,6 @@
+UPD
+0.0;0
+Sample update
++ The mod now has an updater
+- It's very basic at the moment...
+---EOF
