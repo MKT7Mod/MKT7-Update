@@ -2,6 +2,18 @@
 
 import os, sys, math
 
+def byteFmt(x:int):
+    f = ["B", "KiB", "MiB", "GiB", "TiB"]
+    s = 0
+    while x > 1024:
+        x /= 1024
+        s += 1
+    
+    if s:
+        return "{:.1f} {}".format(x, f[s])
+    else:
+        return "{:d} {}".format(x, f[s])
+
 def roundUpBlock(x:int, unit:int):
     return math.ceil(x / unit) * unit
 
@@ -46,3 +58,15 @@ with open(installInfoPath,"wb") as f:
     for i in l:
         i = i.replace("\\","/")
         f.write("{}\n".format(i).encode())
+
+os.chdir(wd0)
+with open("stats.md","w") as f:
+    f.write("""\
+# MKT7 Update Status
+
+- File count: {}
+- Total Size: {} (Blocks: {})
+""".format(
+        len(l),
+        byteFmt(totalSize), math.ceil(totalSize / 131072)
+))
