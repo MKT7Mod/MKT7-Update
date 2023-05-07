@@ -1,4 +1,4 @@
 # MKT7 Update Status
 
-- File count: 186
-- Total Size: 74.8 MiB (Blocks: 598)
+- File count: 253
+- Total Size: 170.0 MiB (Blocks: 1360)
