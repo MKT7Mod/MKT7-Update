@@ -1,4 +1,4 @@
-S/178257920
+S/179699712
 M/config/forcePatch.flag
 M/gamefs/Course/Gagb_BowserCastle1.szs
 M/gamefs/Course/Gctr_AdvancedCircuit.szs
@@ -184,8 +184,8 @@ M/gamefs/Sound/stream/STRM_CN_MARIO_CIRCUIT_F.bcstm
 M/gamefs/Sound/stream/STRM_CN_MARIO_CIRCUIT_N.bcstm
 M/gamefs/Sound/stream/STRM_CN_RAINBOW_ROAD_F.bcstm
 M/gamefs/Sound/stream/STRM_CN_RAINBOW_ROAD_N.bcstm
-M/gamefs/Sound/stream/STRM_CN_RALLY_COURSE_F.bcstm
-M/gamefs/Sound/stream/STRM_CN_RALLY_COURSE_N.bcstm
+M/gamefs/Sound/stream/STRM_CN_RALLY_COURCE_F.bcstm
+M/gamefs/Sound/stream/STRM_CN_RALLY_COURCE_N.bcstm
 M/gamefs/Sound/stream/STRM_CN_SAND_TOWN_F.bcstm
 M/gamefs/Sound/stream/STRM_CN_TOAD_CIRCUIT_F.bcstm
 M/gamefs/Sound/stream/STRM_CN_TOAD_CIRCUIT_N.bcstm
@@ -219,6 +219,8 @@ M/gamefs/Sound/stream/STRM_FANFARE_START_GP.bcstm
 M/gamefs/Sound/stream/STRM_FANFARE_START_TA.bcstm
 M/gamefs/Sound/stream/STRM_MENU_SINGLE_MULTI.bcstm
 M/gamefs/Sound/stream/STRM_TITLE.bcstm
+M/gamefs/UI/menu-ue.szs
+M/gamefs/UI/menu.szs
 M/gamefs/UI/no_archive-ch/logo_l_ch.bmp
 M/gamefs/UI/no_archive-ch/logo_r_ch.bmp
 M/gamefs/UI/no_archive-cm/title_load_1_cm.bmp
@@ -250,5 +252,6 @@ M/gamefs/UI/no_archive/title_wing_r.bclim
 M/gamefs/UI/no_archive/title_yoshi_l.bclim
 M/gamefs/UI/no_archive/title_yoshi_r.bclim
 M/gamefs/UI/race-ee.szs
+M/gamefs/UI/race-ue.szs
 M/gamefs/UI/race.szs
-M/resources/mkt7.3gx
+M/resources/mkt7plg.3gx

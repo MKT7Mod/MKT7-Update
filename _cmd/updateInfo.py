@@ -39,6 +39,12 @@ def writeHashlist():
         for i in range(len(currentFileList)):
             f.write("{}\t{}\n".format(currentFileList[i],currentHashes[i]))
 
+def sarchash(s, mul=101):
+    r = 0
+    for i in s:
+        r = ((r * mul) + ord(i)) & 0xFFFFFFFF
+    return r
+
 if len(sys.argv)<2:
     usage()
 
@@ -93,7 +99,12 @@ for i in range(len(currentFileList)):
         f.seek(0)
         while f.tell()<size:
             hash.update(f.read(65536))
-        currentHashes.append(hash.digest().hex())
+        currentHashes.append(
+            hash.digest().hex() +
+            int.to_bytes(
+                sarchash(currentFileList[i]), 4, "little"
+            ).hex()
+        )
 print()
 os.chdir(cwd)
 
@@ -108,57 +119,66 @@ if mode == MODE_NEW or not os.path.exists(FILEDB_PATH):
 
 listFiles = []
 listHashes = []
+listFHashes = []
 
-with open(FILEDB_PATH,"r") as f:
+with open(FILEDB_PATH,"r", encoding="utf-8", errors="ignore") as f:
     size = f.seek(0,2)
     f.seek(0,0)
     while f.tell()<size:
         s = f.readline().strip().split("\t")
         listFiles.append(s[0])
-        listHashes.append(s[1])
+        listHashes.append(s[1][:64])
+        listFHashes.append(
+            int.to_bytes(
+                sarchash(s[0]), 4, "little"
+            ).hex() if len(s[1])<=64 else s[1][64:]
+        )
 
 addedFiles = []
 renamedFilesFrom = []
 renamedFilesTo = []
+knownFiles = []
 
 for i in range(len(currentFileList)):
-    try: hashIndex = listHashes.index(currentHashes[i])
-    except: hashExists = False
-    else: hashExists = True
-
-    try: nameIndex = listFiles.index(currentFileList[i])
-    except: nameExists = False
-    else: nameExists = True
-
-    if not hashExists:
-        addedFiles.append(currentFileList[i])
-    elif not nameExists:
+    h, fh = currentHashes[i][:64], currentHashes[i][64:]
+    fileContentIntact = False
+    try:
+        fileHashIndex = listFHashes.index(fh)
+        fileExistsAllTheTime = True
+        knownFiles.append(fileHashIndex)
+    except:
+        fileHashIndex = -1
         try:
-            renamedFilesFrom.index(listFiles[hashIndex])
+            fileHashIndex = listHashes.index(h)
+            fileExistsAllTheTime = None
         except:
-            renamedFilesFrom.append(listFiles[hashIndex])
-            renamedFilesTo.append(currentFileList[i])
-        else:
-            addedFiles.append(currentFileList[i])
-
-missingFiles = []
-
-for i in range(len(listFiles)):
-    try: hashIndex =  currentHashes.index(listHashes[i])
-    except: hashExists = False
-    else: hashExists = True
-
-    try: nameIndex = currentFileList.index(listFiles[i])
-    except: nameExists = False
-    else: nameExists = True
+            fileExistsAllTheTime = False
     
-    if not hashExists:
+    if fileExistsAllTheTime:
+        if not listHashes[fileHashIndex] == h:
+            addedFiles.append(currentFileList[i])
+    elif fileExistsAllTheTime is None:
         try:
-            renamedFilesFrom.index(listFiles[i])
+            print("Potential rename has happened!")
+            print(" To: "+currentFileList[i])
+            while True:
+                fileHashIndex = listHashes.index(h, fileHashIndex)
+                if input("From "+listFiles[fileHashIndex]+"?[yN]")[:1].upper()=="Y": break
+                fileHashIndex += 1
         except:
-            missingFiles.append(listFiles[i])
-    elif not nameExists:
-        missingFiles.append(listFiles[i])
+            addedFiles.append(currentFileList[i])
+        else:
+            renamedFilesFrom.append(listFiles[fileHashIndex])
+            renamedFilesTo.append(currentFileList[i])
+            knownFiles.append(fileHashIndex)
+    elif not fileExistsAllTheTime:
+        addedFiles.append(currentFileList[i])
+
+knownFiles.sort(reverse=True)
+for i in knownFiles:
+    listFiles.pop(i)
+
+missingFiles = listFiles
 
 if mode == MODE_CHECK:
     print("Added  :",addedFiles)
@@ -167,7 +187,7 @@ if mode == MODE_CHECK:
     print("  from ",renamedFilesFrom)
     print("  to   ",renamedFilesTo)
 
-with open(FILEDIFF_OUT,"w") as f:
+with open(FILEDIFF_OUT,"w",encoding="utf-8",errors="ignore",newline="") as f:
     f.truncate(0)
     for i in missingFiles:
         s = "D"+i[1:]
@@ -179,8 +199,10 @@ with open(FILEDIFF_OUT,"w") as f:
     for i in addedFiles:
         f.write("{}\n".format(i))
 
-if mode== MODE_UPDATE:
-    if os.path.exists(FILEDB_BAK):
-        os.remove(FILEDB_BAK)
-    os.rename(FILEDB_PATH, FILEDB_BAK)
+if mode == MODE_UPDATE:
+    try:
+        if os.path.exists(FILEDB_BAK):
+            os.remove(FILEDB_BAK)
+        os.rename(FILEDB_PATH, FILEDB_BAK)
+    except: pass
     writeHashlist()

@@ -10,7 +10,7 @@ def byteFmt(x:int):
         s += 1
     
     if s:
-        return "{:.1f} {}".format(x, f[s])
+        return "{:.2f} {}".format(x, f[s])
     else:
         return "{:d} {}".format(x, f[s])
 
@@ -65,7 +65,7 @@ with open("stats.md","w") as f:
 # MKT7 Update Status
 
 - File count: {}
-- Total Size: {} (Blocks: {})
+- Total Size: {} (`{}` blocks)
 """.format(
         len(l),
         byteFmt(totalSize), math.ceil(totalSize / 131072)
