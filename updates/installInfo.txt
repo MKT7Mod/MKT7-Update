@@ -1,4 +1,6 @@
-S/179699712
+S/182714368
+M/cia/MKT7.3dsx
+M/cia/MKT7.cia
 M/config/forcePatch.flag
 M/gamefs/Course/Gagb_BowserCastle1.szs
 M/gamefs/Course/Gctr_AdvancedCircuit.szs
@@ -254,4 +256,4 @@ M/gamefs/UI/no_archive/title_yoshi_r.bclim
 M/gamefs/UI/race-ee.szs
 M/gamefs/UI/race-ue.szs
 M/gamefs/UI/race.szs
-M/resources/mkt7plg.3gx
+M/resources/mkt7.3gx
